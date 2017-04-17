@@ -1,0 +1,307 @@
+<html><head></head><body><div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a href="https://github.com/blakmatrix/node-zendesk">node-zendesk (v1.1.12)</a>
+</h1>
+<h4>zendesk API client wrapper</h4>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.node-zendesk">module node-zendesk</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.node-zendesk.createClient">
+            function <span class="apidocSignatureSpan">node-zendesk.</span>createClient
+            <span class="apidocSignatureSpan">(options)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.node-zendesk.createClient">module node-zendesk.createClient</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.node-zendesk.createClient.createClient">
+            function <span class="apidocSignatureSpan">node-zendesk.</span>createClient
+            <span class="apidocSignatureSpan">(options)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.node-zendesk" id="apidoc.module.node-zendesk">module node-zendesk</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.node-zendesk.createClient" id="apidoc.element.node-zendesk.createClient">
+        function <span class="apidocSignatureSpan">node-zendesk.</span>createClient
+        <span class="apidocSignatureSpan">(options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">createClient = function (options) {
+  var nconf = require('nconf'),
+      store = new nconf.Provider();
+  nconf.use('memory');
+  if (true !== options.disableGlobalState) {
+    nconf.env().argv({
+      's': {
+        alias: 'subdomain'
+      },
+      'u': {
+        alias: 'username'
+      },
+      'p': {
+        alias: 'password'
+      },
+      't': {
+        alias: 'token'
+      },
+      'r': {
+        alias: 'remoteUri'
+      },
+      'hc': {
+        alias: 'helpcenter'
+      },
+      'v': {
+        alias: 'voice'
+      }
+    });
+  }
+
+  options = store.defaults(options);
+
+  if (nconf.get('subdomain')) {
+    var endpoint;
+    if (options.stores.defaults.store.helpcenter) {
+      endpoint = '.zendesk.com/api/v2/help_center';
+    } else if (options.stores.defaults.store.voice){
+      endpoint = '.zendesk.com/api/v2/channels/voice';
+    } else {
+      endpoint = '.zendesk.com/api/v2';
+    }
+    options.stores.defaults.store.remoteUri = 'https://' + nconf.get('subdomain') + endpoint;
+  }
+
+  var client = {}, partsToAdd, clientPath;
+
+  if (options.stores.defaults.store.helpcenter) {
+    partsToAdd = helpcenterParts;
+    clientPath = './client/helpcenter/';
+  } else if (options.stores.defaults.store.voice) {
+    partsToAdd = voiceParts;
+    clientPath = './client/voice/';
+  } else {
+    partsToAdd = parts;
+    clientPath = './client/';
+  }
+
+
+  partsToAdd.forEach(function (k) {
+    exports[k] = require(clientPath + k.toLowerCase())[k];
+  });
+
+  partsToAdd.forEach(function (k) {
+    client[k.toLowerCase()] = new exports[k](options);
+    client[k.toLowerCase()].on('debug::request',  debug);
+    client[k.toLowerCase()].on('debug::response', debug);
+  });
+
+  function debug(args) {
+    if (options.get('debug')) {
+      console.log(args);
+    }
+  }
+
+  return client;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+- [Contributions](https://github.com/blakmatrix/node-zendesk#contributions)
+
+## Example
+
+```js
+var zendesk = require('node-zendesk');
+
+var client = zendesk.<span class="apidocCodeKeywordSpan">createClient</span>({
+username:  'username',
+token:     'token',
+remoteUri: 'https://remote.zendesk.com/api/v2'
+});
+
+client.users.list(function (err, req, result) {
+if (err) {
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.node-zendesk.createClient" id="apidoc.module.node-zendesk.createClient">module node-zendesk.createClient</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.node-zendesk.createClient.createClient" id="apidoc.element.node-zendesk.createClient.createClient">
+        function <span class="apidocSignatureSpan">node-zendesk.</span>createClient
+        <span class="apidocSignatureSpan">(options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">createClient = function (options) {
+  var nconf = require('nconf'),
+      store = new nconf.Provider();
+  nconf.use('memory');
+  if (true !== options.disableGlobalState) {
+    nconf.env().argv({
+      's': {
+        alias: 'subdomain'
+      },
+      'u': {
+        alias: 'username'
+      },
+      'p': {
+        alias: 'password'
+      },
+      't': {
+        alias: 'token'
+      },
+      'r': {
+        alias: 'remoteUri'
+      },
+      'hc': {
+        alias: 'helpcenter'
+      },
+      'v': {
+        alias: 'voice'
+      }
+    });
+  }
+
+  options = store.defaults(options);
+
+  if (nconf.get('subdomain')) {
+    var endpoint;
+    if (options.stores.defaults.store.helpcenter) {
+      endpoint = '.zendesk.com/api/v2/help_center';
+    } else if (options.stores.defaults.store.voice){
+      endpoint = '.zendesk.com/api/v2/channels/voice';
+    } else {
+      endpoint = '.zendesk.com/api/v2';
+    }
+    options.stores.defaults.store.remoteUri = 'https://' + nconf.get('subdomain') + endpoint;
+  }
+
+  var client = {}, partsToAdd, clientPath;
+
+  if (options.stores.defaults.store.helpcenter) {
+    partsToAdd = helpcenterParts;
+    clientPath = './client/helpcenter/';
+  } else if (options.stores.defaults.store.voice) {
+    partsToAdd = voiceParts;
+    clientPath = './client/voice/';
+  } else {
+    partsToAdd = parts;
+    clientPath = './client/';
+  }
+
+
+  partsToAdd.forEach(function (k) {
+    exports[k] = require(clientPath + k.toLowerCase())[k];
+  });
+
+  partsToAdd.forEach(function (k) {
+    client[k.toLowerCase()] = new exports[k](options);
+    client[k.toLowerCase()].on('debug::request',  debug);
+    client[k.toLowerCase()].on('debug::response', debug);
+  });
+
+  function debug(args) {
+    if (options.get('debug')) {
+      console.log(args);
+    }
+  }
+
+  return client;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+- [Contributions](https://github.com/blakmatrix/node-zendesk#contributions)
+
+## Example
+
+```js
+var zendesk = require('node-zendesk');
+
+var client = zendesk.<span class="apidocCodeKeywordSpan">createClient</span>({
+username:  'username',
+token:     'token',
+remoteUri: 'https://remote.zendesk.com/api/v2'
+});
+
+client.users.list(function (err, req, result) {
+if (err) {
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
+</body></html>

@@ -1,4 +1,7 @@
-# api documentation for  [node-zendesk (v1.1.12)](https://github.com/blakmatrix/node-zendesk)  [![npm package](https://img.shields.io/npm/v/npmdoc-node-zendesk.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-node-zendesk) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-node-zendesk.svg)](https://travis-ci.org/npmdoc/node-npmdoc-node-zendesk)
+# npmdoc-node-zendesk
+
+#### basic api documentation for  [node-zendesk (v1.1.12)](https://github.com/blakmatrix/node-zendesk)  [![npm package](https://img.shields.io/npm/v/npmdoc-node-zendesk.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-node-zendesk) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-node-zendesk.svg)](https://travis-ci.org/npmdoc/node-npmdoc-node-zendesk)
+
 #### zendesk API client wrapper
 
 [![NPM](https://nodei.co/npm/node-zendesk.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/node-zendesk)
@@ -164,7 +167,8 @@
     "scripts": {
         "test": "node ./test/*-test.js"
     },
-    "version": "1.1.12"
+    "version": "1.1.12",
+    "bin": {}
 }
 ```
 
